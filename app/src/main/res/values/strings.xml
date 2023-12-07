@@ -4,4 +4,8 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="create_album">Create Album</string>
+    <string name="rename">Rename</string>
+    <string name="delete">Delete</string>
+    <string name="open">Open</string>
+    <string name="add_photo">Add Photo</string>
 </resources>

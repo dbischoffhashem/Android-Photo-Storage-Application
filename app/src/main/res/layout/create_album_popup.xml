@@ -15,18 +15,18 @@
             android:id="@+id/albumNameEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/album_name"/>
+            android:hint="@string/album_name" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/okButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/ok"/>
+        android:text="@string/ok" />
 
     <Button
         android:id="@+id/cancelButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/cancel"/>
+        android:text="@string/cancel" />
 </LinearLayout>
