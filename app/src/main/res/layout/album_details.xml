@@ -15,4 +15,14 @@
         android:text="@string/add_photo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/photosLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/addPhoto"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="vertical"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
