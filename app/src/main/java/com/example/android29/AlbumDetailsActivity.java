@@ -14,8 +14,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 //import android.widget.GridLayout;
 import android.widget.ImageView;
@@ -56,7 +59,8 @@ public class AlbumDetailsActivity extends AppCompatActivity {
                 break;
             }
         }
-        //currentAlbum = (Album) getIntent().getSerializableExtra("album");
+
+        registerForContextMenu(photoGrid); //ADDED
 
         Button addPhotoButton = findViewById(R.id.addPhoto);
         addPhotoButton.setOnClickListener(new View.OnClickListener() {
@@ -132,6 +136,9 @@ public class AlbumDetailsActivity extends AppCompatActivity {
 
             ImageView imageView = new ImageView(this);
 
+            // Set the context menu for each ImageView
+            //registerForContextMenu(imageView);
+
             // Calculate the width and height of each square based on the screen width
             int screenWidth = getResources().getDisplayMetrics().widthPixels;
             int squareSize = screenWidth / 3; // Three squares per row
@@ -139,6 +146,8 @@ public class AlbumDetailsActivity extends AppCompatActivity {
             params.width = squareSize;
             params.height = squareSize;
             imageView.setLayoutParams(params);
+
+            //registerForContextMenu(imageView);
 
             // Set your desired properties for the ImageView, such as scale type, padding, etc.
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -155,7 +164,62 @@ public class AlbumDetailsActivity extends AppCompatActivity {
                 Log.e("Bitmap", "Bitmap is null for path: " + photo.getPath());
             }
         }
+        registerForContextMenu(photoGrid);
     }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.photo_options_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        // Get the position/index of the clicked photo
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        int photoIndex = info.position;
+
+        if (item.getItemId() == R.id.menu_openPhoto) {
+            // Handle "Open" option (e.g., show a larger version of the photo)
+            openPhoto(photoIndex);
+            return true;
+        }
+
+        if (item.getItemId() == R.id.menu_deletePhoto) {
+            // Handle "Delete" option
+            deletePhoto(photoIndex);
+            return true;
+        }
+        return super.onContextItemSelected(item);
+    }
+
+    private void openPhoto(int photoIndex) {
+        // Implement the logic to open the selected photo (e.g., show a larger version)
+        // You can use the 'photoIndex' to get the corresponding Photo object from the list
+        // and then use its path or other details as needed.
+        // Add your code here...
+    }
+
+    private void deletePhoto(int photoIndex) {
+        // Check if the index is within bounds
+        if (photoIndex >= 0 && photoIndex < currentAlbum.getPhotos().size()) {
+            // Get the selected photo from the currentAlbum
+            Photo selectedPhoto = currentAlbum.getPhotos().get(photoIndex);
+
+            // Remove the selected photo from the currentAlbum
+            currentAlbum.getPhotos().remove(photoIndex);
+
+            // Update the displayed photos
+            showPhotos();
+
+            // Optionally, show a toast or other notification
+            Toast.makeText(this, "Photo deleted", Toast.LENGTH_SHORT).show();
+        } else {
+            // Handle the case where the index is out of bounds
+            Toast.makeText(this, "Invalid photo index", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
 
 
