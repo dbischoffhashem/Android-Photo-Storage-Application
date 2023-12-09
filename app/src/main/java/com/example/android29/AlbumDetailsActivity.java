@@ -1,5 +1,7 @@
 package com.example.android29;
 
+import static com.example.android29.Home.USER_FILE_NAME;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.Manifest;
@@ -33,6 +35,7 @@ import java.util.List;
 public class AlbumDetailsActivity extends AppCompatActivity {
 
     private Album currentAlbum;
+    private User currentUser;
     private static final int MY_PERMISSIONS_REQUEST_READ_MEDIA_IMAGES = 1;
 
     @Override
@@ -40,8 +43,16 @@ public class AlbumDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.album_details);
 
-        // Assuming you have passed the current album to this activity
-        currentAlbum = (Album) getIntent().getSerializableExtra("album");
+        currentUser = (User) getIntent().getSerializableExtra("currentUser");
+        List<Album> albums = currentUser.getAlbums();
+        for (Album album : albums) {
+            String currentAlbumName = getIntent().getStringExtra("album");
+            if(album.getName().equals(currentAlbumName)) {
+                currentAlbum = album;
+                break;
+            }
+        }
+        //currentAlbum = (Album) getIntent().getSerializableExtra("album");
 
         Button addPhotoButton = findViewById(R.id.addPhoto);
         addPhotoButton.setOnClickListener(new View.OnClickListener() {
@@ -59,8 +70,7 @@ public class AlbumDetailsActivity extends AppCompatActivity {
                     openGallery();
                 }
 
-                openGallery();
-                //showAddPhotoDialog();
+                //openGallery();
             }
         });
         showPhotos();
@@ -129,6 +139,25 @@ public class AlbumDetailsActivity extends AppCompatActivity {
                 Log.e("Bitmap", "Bitmap is null for path: " + photo.getPath());
             }
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Save user data when the app is paused (e.g., when going to the background)
+        saveUser();
+    }
+
+    private User loadUser() {
+        if (SerializationHelper.fileExists(this, USER_FILE_NAME)) {
+            return (User) SerializationHelper.deserialize(this, USER_FILE_NAME);
+        } else {
+            // Handle the case when the file doesn't exist
+            return null;
+        }
+    }
+    private void saveUser() {
+        SerializationHelper.serialize(this, currentUser, USER_FILE_NAME);
     }
 
 }

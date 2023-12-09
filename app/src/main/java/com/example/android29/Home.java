@@ -21,7 +21,7 @@ import android.widget.Toast;
 import com.example.android29.R;
 
 public class Home extends AppCompatActivity {
-    private static final String USER_FILE_NAME = "user_data.ser";
+    protected static final String USER_FILE_NAME = "user_data.ser";
     private User currentUser;
 
     private void showAlbums() {
@@ -161,7 +161,7 @@ public class Home extends AppCompatActivity {
     private void openAlbumDetails(Album album) {
         Intent intent = new Intent(this, AlbumDetailsActivity.class);
         intent.putExtra("currentUser", currentUser);
-        intent.putExtra("album", album);
+        intent.putExtra("album", album.getName());
         startActivity(intent);
     }
 
