@@ -17,10 +17,12 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+//import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.gridlayout.widget.GridLayout;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -36,6 +38,7 @@ public class AlbumDetailsActivity extends AppCompatActivity {
 
     private Album currentAlbum;
     private User currentUser;
+    private GridLayout photoGrid;
     private static final int MY_PERMISSIONS_REQUEST_READ_MEDIA_IMAGES = 1;
 
     @Override
@@ -43,6 +46,7 @@ public class AlbumDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.album_details);
 
+        photoGrid =(GridLayout) findViewById(R.id.photoGrid);
         currentUser = (User) getIntent().getSerializableExtra("currentUser");
         List<Album> albums = currentUser.getAlbums();
         for (Album album : albums) {
@@ -119,27 +123,41 @@ public class AlbumDetailsActivity extends AppCompatActivity {
     }
 
     private void showPhotos() {
-        LinearLayout photosLayout = findViewById(R.id.photosLayout);
-        photosLayout.removeAllViews();
+        photoGrid.removeAllViews();
 
         List<Photo> photos = currentAlbum.getPhotos();
 
-        for (Photo photo : photos) {
-            ImageView imageView = new ImageView(this);
-            imageView.setLayoutParams(new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-            ));
+        for (int i = 0; i < photos.size(); i++) {
+            Photo photo = photos.get(i);
 
+            ImageView imageView = new ImageView(this);
+
+            // Calculate the width and height of each square based on the screen width
+            int screenWidth = getResources().getDisplayMetrics().widthPixels;
+            int squareSize = screenWidth / 3; // Three squares per row
+            GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+            params.width = squareSize;
+            params.height = squareSize;
+            imageView.setLayoutParams(params);
+
+            // Set your desired properties for the ImageView, such as scale type, padding, etc.
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setPadding(8, 8, 8, 8);
+
+            // Decode the bitmap from the file path
             Bitmap bitmap = decodeFile(photo.getPath());
             if (bitmap != null) {
                 imageView.setImageBitmap(bitmap);
-                photosLayout.addView(imageView);
+
+                // Add the ImageView to the GridLayout
+                photoGrid.addView(imageView);
             } else {
                 Log.e("Bitmap", "Bitmap is null for path: " + photo.getPath());
             }
         }
     }
+
+
 
     @Override
     protected void onPause() {
@@ -159,5 +177,4 @@ public class AlbumDetailsActivity extends AppCompatActivity {
     private void saveUser() {
         SerializationHelper.serialize(this, currentUser, USER_FILE_NAME);
     }
-
 }
