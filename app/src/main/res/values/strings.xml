@@ -9,4 +9,8 @@
     <string name="open">Open</string>
     <string name="add_photo">Add Photo</string>
     <string name="tag_name_prompt" />
+    <string name="add_tag">Add Tag</string>
+    <string name="remove_tag">Remove Tag</string>
+    <string name="no_tags">No tags</string>
+    <string name="remove_tag_prompt" />
 </resources>

@@ -19,19 +19,28 @@
         android:layout_below="@id/fullScreenImageView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:text="No tags"
+        android:text="@string/no_tags"
         android:textColor="@android:color/black"
         android:textSize="18sp" />
 
     <Button
         android:id="@+id/addTagButton"
-        android:layout_width="wrap_content"
+        android:layout_width="109dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="26dp"
         android:onClick="showAddTagPopup"
-        android:text="Add Photo" />
+        android:text="@string/add_tag" />
+
+    <Button
+        android:id="@+id/removeTagButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fullScreenImageView"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="26dp"
+        android:text="@string/remove_tag" />
 
 </RelativeLayout>

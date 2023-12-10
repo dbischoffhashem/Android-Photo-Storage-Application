@@ -61,6 +61,14 @@ public class FullScreenPhotoActivity extends AppCompatActivity {
                 showAddTagPopup();
             }
         });
+
+        // Set click listener for Remove Tag button
+        findViewById(R.id.removeTagButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showRemoveTagPopup();
+            }
+        });
     }
 
     private void showAddTagPopup() {
@@ -104,6 +112,44 @@ public class FullScreenPhotoActivity extends AppCompatActivity {
         showTags();
     }
 
+    private void showRemoveTagPopup() {
+        // Inflate the popup layout
+        View popupView = getLayoutInflater().inflate(R.layout.popup_remove_tag, null);
+
+        // Initialize UI components in the popup layout
+        Spinner removeTagSpinner = popupView.findViewById(R.id.removeTagSpinner);
+
+        // Populate the dropdown options for the remove tag spinner
+        ArrayAdapter<Tag> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, currentPhoto.getTags());
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        removeTagSpinner.setAdapter(adapter);
+
+        // Create the AlertDialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(popupView)
+                .setTitle("Remove Tag")
+                .setPositiveButton("Remove", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Retrieve selected tag to remove
+                        Tag selectedTag = (Tag) removeTagSpinner.getSelectedItem();
+
+                        // Remove the selected tag
+                        removeTag(selectedTag);
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void removeTag(Tag tagToRemove) {
+        // Remove the selected tag from the tags list of the current Photo object
+        currentPhoto.getTags().remove(tagToRemove);
+
+        // Update the UI to reflect the changes
+        showTags();
+    }
 
     private void showTags() {
         TextView tagsTextView = findViewById(R.id.tagsTextView);
