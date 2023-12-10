@@ -13,4 +13,5 @@
     <string name="remove_tag">Remove Tag</string>
     <string name="no_tags">No tags</string>
     <string name="remove_tag_prompt" />
+    <string name="move">Move</string>
 </resources>

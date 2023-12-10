@@ -19,11 +19,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 //import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.gridlayout.widget.GridLayout;
@@ -34,6 +36,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -186,6 +189,10 @@ public class AlbumDetailsActivity extends AppCompatActivity {
                     // Handle "Delete" option
                     deletePhoto(photo);
                     return true;
+                } else if (item.getItemId() == R.id.menu_movePhoto) {
+                    // Handle "Move Photo" option
+                    showMovePhotoPopup(photo);
+                    return true;
                 } else {
                     return false;
                 }
@@ -194,6 +201,67 @@ public class AlbumDetailsActivity extends AppCompatActivity {
 
         popupMenu.show();
     }
+
+    private void showMovePhotoPopup(final Photo photo) {
+        // Inflate the popup layout
+        View popupView = getLayoutInflater().inflate(R.layout.popup_move_photo, null);
+
+        // Initialize UI components in the popup layout
+        Spinner moveAlbumSpinner = popupView.findViewById(R.id.moveAlbumSpinner);
+
+        // Set up the dropdown options for the move album spinner
+        List<Album> userAlbums = currentUser.getAlbums();
+        List<String> albumNames = new ArrayList<>();
+        for(Album album: userAlbums) {
+            albumNames.add(album.getName());
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, albumNames);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        moveAlbumSpinner.setAdapter(adapter);
+
+        // Create the AlertDialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(popupView)
+                .setTitle("Move Photo")
+                .setPositiveButton("Move", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Retrieve selected album to move the photo
+                        String selectedAlbumName = (String) moveAlbumSpinner.getSelectedItem();
+                        // Find the corresponding Album object based on the selected album name
+                        Album selectedAlbum = findAlbumByName(selectedAlbumName);
+
+                        // Move the photo to the selected album
+                        movePhotoToAlbum(photo, selectedAlbum);
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private Album findAlbumByName(String albumName) {
+        List<Album> userAlbums = currentUser.getAlbums();
+        for (Album album : userAlbums) {
+            if (album.getName().equals(albumName)) {
+                return album;
+            }
+        }
+        return null; // Handle the case when the album is not found
+    }
+
+
+    private void movePhotoToAlbum(Photo photo, Album destinationAlbum) {
+        // Remove the photo from the current album
+        currentAlbum.getPhotos().remove(photo);
+
+        // Add the photo to the destination album
+        destinationAlbum.addPhoto(photo);
+
+        // Refresh the displayed photos
+        showPhotos();
+    }
+
     private void openPhoto(final Photo photo) {
 
         Intent intent = new Intent(this, FullScreenPhotoActivity.class);
