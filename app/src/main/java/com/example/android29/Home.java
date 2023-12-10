@@ -64,7 +64,21 @@ public class Home extends AppCompatActivity {
             }
         });
 
+        Button searchButton = findViewById(R.id.searchButton);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openSearchActivity();
+            }
+        });
+
         showAlbums();
+    }
+
+    private void openSearchActivity() {
+        Intent intent = new Intent(this, SearchActivity.class);
+        intent.putExtra("currentUser", currentUser);
+        startActivity(intent);
     }
 
     private void showAlbumOptions(final Album album) {
