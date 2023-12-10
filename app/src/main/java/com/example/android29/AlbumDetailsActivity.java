@@ -23,6 +23,7 @@ import android.widget.Button;
 //import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import androidx.gridlayout.widget.GridLayout;
@@ -35,7 +36,6 @@ import androidx.core.content.ContextCompat;
 
 import java.util.Date;
 import java.util.List;
-
 
 public class AlbumDetailsActivity extends AppCompatActivity {
 
@@ -138,7 +138,12 @@ public class AlbumDetailsActivity extends AppCompatActivity {
 
             // Set the context menu for each ImageView
             //registerForContextMenu(imageView);
-
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showPhotoOptions(photo);
+                }
+            });
             // Calculate the width and height of each square based on the screen width
             int screenWidth = getResources().getDisplayMetrics().widthPixels;
             int squareSize = screenWidth / 3; // Three squares per row
@@ -167,60 +172,60 @@ public class AlbumDetailsActivity extends AppCompatActivity {
         registerForContextMenu(photoGrid);
     }
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        getMenuInflater().inflate(R.menu.photo_options_menu, menu);
+    private void showPhotoOptions(final Photo photo) {
+        PopupMenu popupMenu = new PopupMenu(this, findViewById(R.id.photoGrid));
+        popupMenu.getMenuInflater().inflate(R.menu.photo_options_menu, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.menu_openPhoto) {
+                    // Handle "Open" option
+                    openPhoto(photo);
+                    return true;
+                } else if (item.getItemId() == R.id.menu_deletePhoto) {
+                    // Handle "Delete" option
+                    deletePhoto(photo);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
+
+        popupMenu.show();
     }
+    private void openPhoto(final Photo photo) {
 
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        // Get the position/index of the clicked photo
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        int photoIndex = info.position;
-
-        if (item.getItemId() == R.id.menu_openPhoto) {
-            // Handle "Open" option (e.g., show a larger version of the photo)
-            openPhoto(photoIndex);
-            return true;
-        }
-
-        if (item.getItemId() == R.id.menu_deletePhoto) {
-            // Handle "Delete" option
-            deletePhoto(photoIndex);
-            return true;
-        }
-        return super.onContextItemSelected(item);
-    }
-
-    private void openPhoto(int photoIndex) {
-        // Implement the logic to open the selected photo (e.g., show a larger version)
-        // You can use the 'photoIndex' to get the corresponding Photo object from the list
-        // and then use its path or other details as needed.
-        // Add your code here...
-    }
-
-    private void deletePhoto(int photoIndex) {
-        // Check if the index is within bounds
-        if (photoIndex >= 0 && photoIndex < currentAlbum.getPhotos().size()) {
-            // Get the selected photo from the currentAlbum
-            Photo selectedPhoto = currentAlbum.getPhotos().get(photoIndex);
-
-            // Remove the selected photo from the currentAlbum
-            currentAlbum.getPhotos().remove(photoIndex);
-
-            // Update the displayed photos
-            showPhotos();
-
-            // Optionally, show a toast or other notification
-            Toast.makeText(this, "Photo deleted", Toast.LENGTH_SHORT).show();
-        } else {
-            // Handle the case where the index is out of bounds
-            Toast.makeText(this, "Invalid photo index", Toast.LENGTH_SHORT).show();
-        }
+        Intent intent = new Intent(this, FullScreenPhotoActivity.class);
+        intent.putExtra("photoPath", photo.getPath());
+        startActivity(intent);
     }
 
 
+    private void deletePhoto(final Photo photo) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Delete Photo");
+        builder.setMessage("Are you sure you want to delete the photo?");
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Remove the album from the user's list of albums
+                currentAlbum.getPhotos().remove(photo);
+                showPhotos(); // Refresh the displayed albums
+            }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
 
 
     @Override
@@ -242,3 +247,4 @@ public class AlbumDetailsActivity extends AppCompatActivity {
         SerializationHelper.serialize(this, currentUser, USER_FILE_NAME);
     }
 }
+
