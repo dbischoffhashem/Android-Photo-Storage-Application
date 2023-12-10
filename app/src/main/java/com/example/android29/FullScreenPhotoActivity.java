@@ -1,5 +1,7 @@
 package com.example.android29;
 
+import static com.example.android29.Home.USER_FILE_NAME;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,8 +9,10 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -164,5 +168,75 @@ public class FullScreenPhotoActivity extends AppCompatActivity {
         }
     }
 
+    public void startSlideshow(View view) {
+        // Get the index of the current photo in the album
+        final int[] currentIndex = {currentAlbum.getPhotos().indexOf(currentPhoto)};
+
+        // Create a layout inflater to inflate the slideshow popup
+        LayoutInflater inflater = getLayoutInflater();
+        View popupView = inflater.inflate(R.layout.popup_slideshow, null);
+
+        // Initialize UI components in the popup layout
+        ImageView slideshowImageView = popupView.findViewById(R.id.slideshowImageView);
+        Button nextButton = popupView.findViewById(R.id.nextButton);
+        Button prevButton = popupView.findViewById(R.id.prevButton);
+
+        // Display the current photo in the slideshow popup
+        Bitmap currentBitmap = BitmapFactory.decodeFile(currentPhoto.getPath());
+        slideshowImageView.setImageBitmap(currentBitmap);
+
+        // Set up click listeners for next and previous buttons
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Move to the next photo in the album
+                currentIndex[0] = (currentIndex[0] + 1) % currentAlbum.getPhotos().size();
+                updateSlideshowImage(slideshowImageView, currentIndex[0]);
+            }
+        });
+
+        prevButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Move to the previous photo in the album
+                currentIndex[0] = (currentIndex[0] - 1 + currentAlbum.getPhotos().size()) % currentAlbum.getPhotos().size();
+                updateSlideshowImage(slideshowImageView, currentIndex[0]);
+            }
+        });
+
+        // Create the AlertDialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(popupView)
+                .setTitle("Slideshow")
+                .setNegativeButton("Close", null)
+                .show();
+    }
+
+    private void updateSlideshowImage(ImageView imageView, int index) {
+        // Update the image in the slideshow popup based on the given index
+        Photo newPhoto = currentAlbum.getPhotos().get(index);
+        Bitmap bitmap = BitmapFactory.decodeFile(newPhoto.getPath());
+        imageView.setImageBitmap(bitmap);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Save user data when the app is paused (e.g., when going to the background)
+        saveUser();
+    }
+
+    private User loadUser() {
+        if (SerializationHelper.fileExists(this, USER_FILE_NAME)) {
+            return (User) SerializationHelper.deserialize(this, USER_FILE_NAME);
+        } else {
+            // Handle the case when the file doesn't exist
+            return null;
+        }
+    }
+
+    private void saveUser() {
+        SerializationHelper.serialize(this, currentUser, USER_FILE_NAME);
+    }
 
 }

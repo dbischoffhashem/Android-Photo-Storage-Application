@@ -38,9 +38,22 @@
         android:id="@+id/removeTagButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/fullScreenImageView"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="34dp"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="26dp"
+        android:layout_marginEnd="240dp"
         android:text="@string/remove_tag" />
+
+    <Button
+        android:id="@+id/slideshowButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/removeTagButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:text="Slideshow"
+        android:onClick="startSlideshow"/>
 
 </RelativeLayout>

@@ -200,6 +200,7 @@ public class AlbumDetailsActivity extends AppCompatActivity {
         intent.putExtra("currentUser", currentUser);
         intent.putExtra("albumName", currentAlbum.getName());
         intent.putExtra("photoPath", photo.getPath());
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //ADDED
         startActivity(intent);
     }
 
