@@ -19,6 +19,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.List;
+import android.widget.Toast;
+
 
 public class FullScreenPhotoActivity extends AppCompatActivity {
 
@@ -111,9 +113,39 @@ public class FullScreenPhotoActivity extends AppCompatActivity {
         // Create a new Tag object with the selected name and value
         Tag newTag = new Tag(tagName, tagValue);
 
-        // Add the new tag to the tags list of the current Photo object
-        currentPhoto.addTag(newTag);
-        showTags();
+        boolean dupExists= false;
+        boolean isLocationTag = tagName.equalsIgnoreCase("Location");
+        boolean locationTagExists = false;
+        if (currentPhoto.getTags() != null && !currentPhoto.getTags().isEmpty())
+        {
+            for(Tag existingTag: currentPhoto.getTags())
+            {
+                if(existingTag.getValue().equalsIgnoreCase(newTag.getValue()))
+                {
+                    dupExists = true;
+                }
+                if(existingTag.getName().equalsIgnoreCase("Location"))
+                {
+                    locationTagExists = true;
+                }
+            }
+        }
+        if (isLocationTag && locationTagExists) {
+            // Show error message for duplicate location tag
+            showToast("Location tag already exists.");
+        } else if (!isLocationTag && dupExists) {
+            // Show error message for duplicate tag (excluding location tag)
+            showToast("Duplicate tag name.");
+        } else {
+            // Add the new tag
+            currentPhoto.addTag(newTag);
+            showTags();
+        }
+    }
+
+    private void showToast(String message) {
+        // Display a short-lived message on the screen (Toast)
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     private void showRemoveTagPopup() {

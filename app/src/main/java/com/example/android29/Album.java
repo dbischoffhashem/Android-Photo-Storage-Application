@@ -23,6 +23,7 @@ public class Album implements Serializable {
 
     public String getName() {
         return name;
+
     }
 
     public List<Photo> getPhotos() {
