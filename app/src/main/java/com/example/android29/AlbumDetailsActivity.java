@@ -197,6 +197,8 @@ public class AlbumDetailsActivity extends AppCompatActivity {
     private void openPhoto(final Photo photo) {
 
         Intent intent = new Intent(this, FullScreenPhotoActivity.class);
+        intent.putExtra("currentUser", currentUser);
+        intent.putExtra("albumName", currentAlbum.getName());
         intent.putExtra("photoPath", photo.getPath());
         startActivity(intent);
     }

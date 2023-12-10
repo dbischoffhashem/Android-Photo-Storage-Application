@@ -12,5 +12,15 @@
         android:contentDescription="Full-screen photo"
         android:scaleType="fitCenter" />
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/tagsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fullScreenImageView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="No tags"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
 
+</RelativeLayout>
