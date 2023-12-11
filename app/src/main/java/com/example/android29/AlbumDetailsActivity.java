@@ -252,15 +252,30 @@ public class AlbumDetailsActivity extends AppCompatActivity {
 
 
     private void movePhotoToAlbum(Photo photo, Album destinationAlbum) {
-        // Remove the photo from the current album
-        currentAlbum.getPhotos().remove(photo);
+        // Check if the destination album already contains a photo with the same path
+        boolean photoExistsInDestination = false;
+        for (Photo destinationPhoto : destinationAlbum.getPhotos()) {
+            if (destinationPhoto.getPath().equalsIgnoreCase(photo.getPath())) {
+                photoExistsInDestination = true;
+                break;
+            }
+        }
 
-        // Add the photo to the destination album
-        destinationAlbum.addPhoto(photo);
+        if (!photoExistsInDestination) {
+            // Remove the photo from the current album
+            currentAlbum.getPhotos().remove(photo);
 
-        // Refresh the displayed photos
-        showPhotos();
+            // Add the photo to the destination album
+            destinationAlbum.addPhoto(photo);
+
+            // Refresh the displayed photos
+            showPhotos();
+        } else {
+            showToast("Photo already exists in the destination album!");
+        }
     }
+
+
 
     private void openPhoto(final Photo photo) {
 
