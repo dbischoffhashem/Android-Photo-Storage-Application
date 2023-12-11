@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SearchTwoTagsActivity">
+
+    <Spinner
+        android:id="@+id/tag1Spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_centerHorizontal="true"/>
+
+    <Spinner
+        android:id="@+id/logicalOperatorSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="103dp"
+        android:layout_marginEnd="255dp" />
+
+    <EditText
+        android:id="@+id/searchEditText1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tag1Spinner"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="Enter search term for Tag 1"
+        android:inputType="text" />
+
+    <Spinner
+        android:id="@+id/tag2Spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/searchEditText1"
+        android:layout_marginTop="16dp"
+        android:layout_centerHorizontal="true"/>
+
+    <EditText
+        android:id="@+id/searchEditText2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tag2Spinner"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="Enter search term for Tag 2"
+        android:inputType="text" />
+
+    <Button
+        android:id="@+id/searchTwoTagsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/searchEditText2"
+        android:layout_marginTop="16dp"
+        android:layout_centerHorizontal="true"
+        android:text="Search by Two Tags" />
+
+    <androidx.gridlayout.widget.GridLayout
+        android:id="@+id/searchResultsGrid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/searchTwoTagsButton"
+        android:layout_marginTop="16dp"
+        app:columnCount="3">
+    </androidx.gridlayout.widget.GridLayout>
+
+</RelativeLayout>

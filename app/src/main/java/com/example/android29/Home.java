@@ -72,7 +72,21 @@ public class Home extends AppCompatActivity {
             }
         });
 
+        Button searchTwoTagsButton = findViewById(R.id.searchTwoTagsButton);
+        searchTwoTagsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openSearchTwoTagsActivity();
+            }
+        });
+
         showAlbums();
+    }
+
+    private void openSearchTwoTagsActivity() {
+        Intent intent = new Intent(this, SearchTwoTagsActivity.class);
+        intent.putExtra("currentUser", currentUser);
+        startActivity(intent);
     }
 
     private void openSearchActivity() {
