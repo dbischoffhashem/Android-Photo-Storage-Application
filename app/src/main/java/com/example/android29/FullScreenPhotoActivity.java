@@ -5,7 +5,9 @@ import static com.example.android29.Home.USER_FILE_NAME;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -270,5 +272,14 @@ public class FullScreenPhotoActivity extends AppCompatActivity {
     private void saveUser() {
         SerializationHelper.serialize(this, currentUser, USER_FILE_NAME);
     }
+
+//    @Override
+//    public void onBackPressed() {
+//        Intent intent = new Intent();
+//        intent.putExtra("currentUser", currentUser);
+//        intent.putExtra("album", currentAlbum.getName());
+//        setResult(Activity.RESULT_OK, intent);
+//        super.onBackPressed(); // Call the default back button behavior
+//    }
 
 }

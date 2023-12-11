@@ -87,24 +87,24 @@ public class AlbumDetailsActivity extends AppCompatActivity {
         showPhotos();
     }
 
-    private final ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                    Intent data = result.getData();
-                    Uri selectedImageUri = data.getData();
-
-                    // Now you can use the selectedImageUri to do whatever you need with the selected image
-                    // For example, you can create a Photo object and add it to the current album
-                    String imagePath = getPathFromUri(selectedImageUri);
-                    if (imagePath != null) {
-                        Photo selectedPhoto = new Photo(imagePath, "Caption", new Date());
-                        currentAlbum.addPhoto(selectedPhoto);
-                        showPhotos();
-                    }
-                }
-            }
-    );
+//    private final ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
+//            new ActivityResultContracts.StartActivityForResult(),
+//            result -> {
+//                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+//                    Intent data = result.getData();
+//                    Uri selectedImageUri = data.getData();
+//
+//                    // Now you can use the selectedImageUri to do whatever you need with the selected image
+//                    // For example, you can create a Photo object and add it to the current album
+//                    String imagePath = getPathFromUri(selectedImageUri);
+//                    if (imagePath != null) {
+//                        Photo selectedPhoto = new Photo(imagePath, "Caption", new Date());
+//                        currentAlbum.addPhoto(selectedPhoto);
+//                        showPhotos();
+//                    }
+//                }
+//            }
+//    );
 
     private void openGallery() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -268,7 +268,7 @@ public class AlbumDetailsActivity extends AppCompatActivity {
         intent.putExtra("currentUser", currentUser);
         intent.putExtra("albumName", currentAlbum.getName());
         intent.putExtra("photoPath", photo.getPath());
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //ADDED
+        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //ADDED
         startActivity(intent);
     }
 
@@ -316,6 +316,53 @@ public class AlbumDetailsActivity extends AppCompatActivity {
     }
     private void saveUser() {
         SerializationHelper.serialize(this, currentUser, USER_FILE_NAME);
+    }
+
+
+    private final ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    Intent data = result.getData();
+                    Uri selectedImageUri = data.getData();
+
+                    // Now you can use the selectedImageUri to do whatever you need with the selected image
+                    // For example, you can create a Photo object and add it to the current album
+                    String imagePath = getPathFromUri(selectedImageUri);
+                    String comparePath = null;
+                    boolean duplicatePhoto = false;
+                    if (imagePath != null)
+                    {
+                        Photo selectedPhoto = new Photo(imagePath, "Caption", new Date());
+                        for (Photo p : currentAlbum.getPhotos())
+                        {
+                            comparePath = p.getPath();
+                            if (comparePath.equalsIgnoreCase(imagePath))
+                            {
+                                duplicatePhoto = true;
+                            }
+                        }
+                        if (!duplicatePhoto)
+                        {
+                            currentAlbum.addPhoto(selectedPhoto);
+                            showPhotos();
+                        }
+                        else
+                        {
+                            showToast("Can not add photo, there is a duplicate!");
+                        }
+                    }
+                    else
+                    {
+                        showToast("Can not add photo, there is no path!");
+                    }
+                }
+            }
+    );
+
+    private void showToast(String message) {
+        // Display a short-lived message on the screen (Toast)
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }
 
