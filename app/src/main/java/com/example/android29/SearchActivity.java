@@ -110,7 +110,7 @@ public class SearchActivity extends AppCompatActivity {
             for (final Photo photo : album.getPhotos()) {
                 for (Tag tag : photo.getTags()) {
                     if (tag.getName().equalsIgnoreCase(selectedTag) &&
-                            tag.getValue().toLowerCase().contains(searchTerm)) {
+                            tag.getValue().toLowerCase().equals(searchTerm)) {
                         ImageView imageView = new ImageView(SearchActivity.this);
 
                         int screenWidth = getResources().getDisplayMetrics().widthPixels;

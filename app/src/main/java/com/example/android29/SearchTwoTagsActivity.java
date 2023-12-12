@@ -167,12 +167,12 @@ public class SearchTwoTagsActivity extends AppCompatActivity {
                 // Loop through each tag in the photo
                 for (Tag tag : photoTags) {
                     if (tag.getName().equalsIgnoreCase(firstSelectedTag) &&
-                            tag.getValue().toLowerCase().contains(searchTerm)) {
+                            tag.getValue().toLowerCase().equals(searchTerm)) {
                         firstTagFound = true;
                     }
 
                     if (tag.getName().equalsIgnoreCase(secondSelectedTag) &&
-                            tag.getValue().toLowerCase().contains(searchTerm2)) {
+                            tag.getValue().toLowerCase().equals(searchTerm2)) {
                         secondTagFound = true;
                     }
                 }
