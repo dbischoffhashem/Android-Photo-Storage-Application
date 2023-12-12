@@ -87,24 +87,6 @@ public class AlbumDetailsActivity extends AppCompatActivity {
         showPhotos();
     }
 
-//    private final ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
-//            new ActivityResultContracts.StartActivityForResult(),
-//            result -> {
-//                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-//                    Intent data = result.getData();
-//                    Uri selectedImageUri = data.getData();
-//
-//                    // Now you can use the selectedImageUri to do whatever you need with the selected image
-//                    // For example, you can create a Photo object and add it to the current album
-//                    String imagePath = getPathFromUri(selectedImageUri);
-//                    if (imagePath != null) {
-//                        Photo selectedPhoto = new Photo(imagePath, "Caption", new Date());
-//                        currentAlbum.addPhoto(selectedPhoto);
-//                        showPhotos();
-//                    }
-//                }
-//            }
-//    );
 
     private void openGallery() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -252,30 +234,15 @@ public class AlbumDetailsActivity extends AppCompatActivity {
 
 
     private void movePhotoToAlbum(Photo photo, Album destinationAlbum) {
-        // Check if the destination album already contains a photo with the same path
-        boolean photoExistsInDestination = false;
-        for (Photo destinationPhoto : destinationAlbum.getPhotos()) {
-            if (destinationPhoto.getPath().equalsIgnoreCase(photo.getPath())) {
-                photoExistsInDestination = true;
-                break;
-            }
-        }
+        // Remove the photo from the current album
+        currentAlbum.getPhotos().remove(photo);
 
-        if (!photoExistsInDestination) {
-            // Remove the photo from the current album
-            currentAlbum.getPhotos().remove(photo);
+        // Add the photo to the destination album
+        destinationAlbum.addPhoto(photo);
 
-            // Add the photo to the destination album
-            destinationAlbum.addPhoto(photo);
-
-            // Refresh the displayed photos
-            showPhotos();
-        } else {
-            showToast("Photo already exists in the destination album!");
-        }
+        // Refresh the displayed photos
+        showPhotos();
     }
-
-
 
     private void openPhoto(final Photo photo) {
 

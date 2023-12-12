@@ -33,7 +33,7 @@
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".AlbumDetailsActivity" />
+                android:value=".Home" />
         </activity>
         <activity
             android:name=".AlbumDetailsActivity"
